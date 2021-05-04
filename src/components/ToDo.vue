@@ -64,7 +64,6 @@ export default {
   },
   data() {
     return {
-      hello: "Hello World!",
       todo: {
         id: 0,
         comment: "",
