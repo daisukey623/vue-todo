@@ -6,20 +6,22 @@
         type="radio"
         name="status"
         value="all"
-        checked
         @click="showAll"
+        v-model="filter"
       />すべて
       <input
         type="radio"
         name="status"
         value="active"
         @click="showWorking"
+        v-model="filter"
       />作業中
       <input
         type="radio"
         name="status"
         value="completed"
         @click="showDone"
+        v-model="filter"
       />完了
     </form>
 
@@ -58,7 +60,7 @@
 
 <script>
 export default {
-  name: "ToDo",
+  name: 'ToDo',
   props: {
     msg: String,
   },
@@ -66,23 +68,19 @@ export default {
     return {
       todo: {
         id: 0,
-        comment: "",
-        status: "作業中",
-        delete: "削除",
+        comment: '',
+        status: '作業中',
+        delete: '削除',
         isDisplayActive: true,
         isDisplayNone: false,
       },
       todos: [],
+      filter: 'all',
     };
   },
   computed: {},
   methods: {
-    addTask: function () {
-      // コメントが空白なら追加されない
-      if (this.todo.comment === "") {
-        return;
-      }
-      console.log(this.todos);
+    addTask() {
       // dataと紐付け
       const todo = {
         id: this.todo.id,
@@ -96,9 +94,14 @@ export default {
       // 次の新規タスクの準備
       this.todo.id++;
       this.todos.push(todo);
-      this.todo.comment = "";
+      this.todo.comment = '';
+      // ラジオボタン完了時、新規タスク追加を非表示
+      if (this.filter === 'completed') {
+        todo.isDisplayActive = false;
+        todo.isDisplayNone = true;
+      }
     },
-    deleteTask: function (todo) {
+    deleteTask(todo) {
       const index = this.todos.indexOf(todo);
       this.todos.splice(index, 1);
       let idIndex = 0;
@@ -108,31 +111,30 @@ export default {
         this.todos[i].id = idIndex;
         idIndex++;
       }
-
       //  追加タスクのIDを連番にする
       this.todo.id = idIndex;
     },
-    changeStatus: function (todo) {
-      if (todo.status === "作業中") {
-        todo.status = "完了";
+    changeStatus(todo) {
+      if (todo.status === '作業中') {
+        todo.status = '完了';
       } else {
-        todo.status = "作業中";
+        todo.status = '作業中';
       }
     },
-    showAll: function () {
+    showAll() {
       for (let i = 0; i < this.todos.length; i++) {
         if (
-          this.todos[i].status === "完了" ||
-          this.todos[i].status === "作業中"
+          this.todos[i].status === '完了' ||
+          this.todos[i].status === '作業中'
         ) {
           this.todos[i].isDisplayActive = true;
           this.todos[i].isDisplayNone = false;
         }
       }
     },
-    showWorking: function () {
+    showWorking() {
       for (let i = 0; i < this.todos.length; i++) {
-        if (this.todos[i].status === "完了") {
+        if (this.todos[i].status === '完了') {
           this.todos[i].isDisplayActive = false;
           this.todos[i].isDisplayNone = true;
         } else {
@@ -141,9 +143,12 @@ export default {
         }
       }
     },
-    showDone: function () {
+    showHello() {
+      console.log('hello');
+    },
+    showDone() {
       for (let i = 0; i < this.todos.length; i++) {
-        if (this.todos[i].status === "作業中") {
+        if (this.todos[i].status === '作業中') {
           this.todos[i].isDisplayActive = false;
           this.todos[i].isDisplayNone = true;
         } else {
